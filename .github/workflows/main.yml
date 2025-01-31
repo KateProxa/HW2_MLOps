@@ -24,6 +24,11 @@ jobs:
 
       - name: Install DVC with Google Drive support
         run: pip install dvc[gdrive]
+        
+      - name: Install Google Cloud SDK
+        run: |
+          curl https://sdk.cloud.google.com | bash
+          echo "$HOME/google-cloud-sdk/bin" >> $GITHUB_PATH
 
       - name: Configure Google Drive credentials
         env:
@@ -46,8 +51,8 @@ jobs:
 
       - name: Git add and commit DVC files
         run: |
-          git config user.email "your-email@example.com"  # Укажите свой email
-          git config user.name "Your Name"  # Укажите свое имя
+          git config user.email "ekater_1997@mail.ru"  
+          git config user.name "KateProxa" 
           git add .dvc dvc.lock
     
           if [[ $(git status --porcelain | grep -c "dvc.lock\|.dvc") -ne 0 ]]; then
