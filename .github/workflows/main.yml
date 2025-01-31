@@ -20,7 +20,7 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install --upgrade pip
-          pip install dvc pandas "dvc[gdrive]"
+          pip install dvc pandas scikit-learn "dvc[gdrive]"
           pip install -r requirements.txt
 
       - name: Install DVC with Google Drive support
