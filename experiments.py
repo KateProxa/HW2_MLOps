@@ -219,7 +219,8 @@ def generate_report(filtered_runs):
         figsize=(16, 8),
         colormap="viridis",
     )
-    plt.title("Model Performance Comparison", fontsize=16)
+
+    plt.title("Сравнение производительности моделей", fontsize=16)
     plt.ylabel("Score")
     plt.xticks(rotation=45, ha="right", fontsize=12)
     plt.legend(title="Metrics", fontsize=12)
@@ -233,16 +234,18 @@ def generate_report(filtered_runs):
 
     # Формирование выводов
     best_model = filtered_runs.loc[
-        filtered_runs["accuracy"].idxmax()
+        filtered_runs["f1_score"].idxmax()
     ]["Model"]
     insights = [
         f"Наилучшая модель: {best_model}, так как она показала лучшие метрики.",  # noqa:E501
-        "Результаты других моделей проанализированы в таблице ниже.",
+        "Результаты других моделей проанализированы в таблицах выше.",
+        "Модели логистической регрессии также продемонстрировали хорошие результаты, но с некоторыми недостатками в полноте для класса \"негатив\".",
+        "Модели деревьев решений оказались менее эффективными по сравнению с линейными моделями, что может быть связано с их чувствительностью к переобучению, особенно при увеличении глубины дерева."
     ]
 
     # Рендеринг HTML-отчета через Jinja2
     template_path = "report_template.html"
-    output_path = output_dir + "/index.html"
+    output_path = os.path.join(output_dir, "index.html")
 
     # Генерация идентификатора эксперимента
     experiment_id = datetime.now().strftime("%Y%m%d%H%M%S")
