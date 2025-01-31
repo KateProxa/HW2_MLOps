@@ -1,7 +1,6 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
-
 # Загрузка данных
 def load_data(input_path):
     df = pd.read_csv(input_path)
@@ -55,6 +54,6 @@ def main(input_path, output_path):
 
 
     if __name__ == "__main__":
-        main("./data/ObesityDataSet.csv", "./data/clean_data.csv")
+        main("/home/runner/work/HW2_MLOps/HW2_MLOps/data/ObesityDataSet.csv", "/home/runner/work/HW2_MLOps/HW2_MLOps/data/clean_data.csv")
 
 
