@@ -1,5 +1,10 @@
 dvc
+dvc[gdrive]
+numpy
 pandas
 mlflow
 scikit-learn
-dvc[gdrive]
+seaborn
+matplotlib
+jinja2
+clearml

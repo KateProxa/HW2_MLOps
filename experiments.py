@@ -7,7 +7,7 @@ import seaborn as sns
 import os
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.svm import SVC  
+from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
     accuracy_score,
@@ -65,14 +65,7 @@ def save_confusion_matrix(y_true, y_pred, model_name):
     return filename
 
 
-def log_model_with_metrics(        
-        model,
-        model_name,
-        X_train,
-        X_test,
-        y_train,
-        y_test
-    ):
+def log_model_with_metrics(model, model_name, X_train, X_test, y_train, y_test):
     """Логирование модели и метрик в MLflow"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     with mlflow.start_run(run_name=f"{model_name}_{timestamp}") as run:
@@ -83,12 +76,9 @@ def log_model_with_metrics(
 
         # Метрики
         accuracy = accuracy_score(y_test, y_pred)
-        precision = precision_score(
-            y_test, y_pred, average="weighted", zero_division=0)
-        recall = recall_score(
-            y_test, y_pred, average="weighted", zero_division=0)
-        f1 = f1_score(
-            y_test, y_pred, average="weighted", zero_division=0)
+        precision = precision_score(y_test, y_pred, average="weighted", zero_division=0)
+        recall = recall_score(y_test, y_pred, average="weighted", zero_division=0)
+        f1 = f1_score(y_test, y_pred, average="weighted", zero_division=0)
 
         # Логирование параметров модели
         mlflow.log_param("model", model_name)
@@ -100,7 +90,6 @@ def log_model_with_metrics(
         mlflow.log_metric("precision", precision)
         mlflow.log_metric("recall", recall)
         mlflow.log_metric("f1_score", f1)
-
 
         # Сохранение матрицы ошибок
         cm_filename = save_confusion_matrix(y_test, y_pred, model_name)
@@ -118,7 +107,12 @@ def log_model_with_metrics(
         mlflow.log_artifact(report_save_path)
 
         # Сохранение модели в MLflow с примером входных данных для автоматического определения сигнатуры модели
-        mlflow.sklearn.log_model(model, "model", input_example=X_test.iloc[:1], registered_model_name=model_name)
+        mlflow.sklearn.log_model(
+            model,
+            "model",
+            input_example=X_test.iloc[:1],
+            registered_model_name=model_name,
+        )
 
         return {
             "run_id": run.info.run_id,
@@ -141,9 +135,7 @@ def run_experiments():
             "name": "Logistic Regression (C=0.5)",
         },
         {
-            "model": SVC(
-                kernel="linear", random_state=42
-            ),  
+            "model": SVC(kernel="linear", random_state=42),
             "name": "SVM (Linear Kernel)",
         },
         {
@@ -160,36 +152,36 @@ def run_experiments():
     for exp in experiments:
         print(f"Starting experiment with {exp['name']}...")
         run_results = log_model_with_metrics(
-            exp['model'],
-            exp['name'],
-            X_train,
-            X_test,
-            y_train,
-            y_test
+            exp["model"], exp["name"], X_train, X_test, y_train, y_test
         )
         run_id = run_results["run_id"]
         # Сохраняем данные эксперимента
-        results.append({
-            'RunID': run_id,
-            'Model': exp['name'],
-            'accuracy': mlflow.get_run(run_id).data.metrics['accuracy'],
-            'precision': mlflow.get_run(run_id).data.metrics['precision'],
-            'recall': mlflow.get_run(run_id).data.metrics['recall'],
-            'f1_score': mlflow.get_run(run_id).data.metrics['f1_score'],
-            'confusion_matrix_path': run_results["confusion_matrix_path"],
-            'classification_report_path': run_results["classification_report_path"],  # noqa:E501
-        })
-        task.connect({
-            "accuracy": mlflow.get_run(run_id).data.metrics["accuracy"],
-            "precision": mlflow.get_run(run_id).data.metrics["precision"],
-            "recall": mlflow.get_run(run_id).data.metrics["recall"],
-            "f1_score": mlflow.get_run(run_id).data.metrics["f1_score"],
-            "confusion_matrix_path": run_results["confusion_matrix_path"],
-            "classification_report_path": run_results["classification_report_path"]}
-            )
+        results.append(
+            {
+                "RunID": run_id,
+                "Model": exp["name"],
+                "accuracy": mlflow.get_run(run_id).data.metrics["accuracy"],
+                "precision": mlflow.get_run(run_id).data.metrics["precision"],
+                "recall": mlflow.get_run(run_id).data.metrics["recall"],
+                "f1_score": mlflow.get_run(run_id).data.metrics["f1_score"],
+                "confusion_matrix_path": run_results["confusion_matrix_path"],
+                "classification_report_path": run_results[
+                    "classification_report_path"
+                ],  # noqa:E501
+            }
+        )
+        task.connect(
+            {
+                "accuracy": mlflow.get_run(run_id).data.metrics["accuracy"],
+                "precision": mlflow.get_run(run_id).data.metrics["precision"],
+                "recall": mlflow.get_run(run_id).data.metrics["recall"],
+                "f1_score": mlflow.get_run(run_id).data.metrics["f1_score"],
+                "confusion_matrix_path": run_results["confusion_matrix_path"],
+                "classification_report_path": run_results["classification_report_path"],
+            }
+        )
 
         print(f"Completed experiment with {exp['name']}")
-
 
     # Преобразуем результаты в DataFrame
     results_df = pd.DataFrame(results)
@@ -199,7 +191,7 @@ def run_experiments():
 # Генерация HTML-отчета
 def generate_report(filtered_runs):
     # Сохраняем только последние 4 эксперимента
-    #filtered_runs = filtered_runs[-4:]
+    # filtered_runs = filtered_runs[-4:]
 
     # Округляем значения до 4 знаков
     for metric in ["accuracy", "precision", "recall", "f1_score"]:
@@ -207,7 +199,11 @@ def generate_report(filtered_runs):
 
     # Создаем копию для отображения в таблице метрик
     filtered_runs_display = filtered_runs.drop(
-        columns=["RunID", "confusion_matrix_path", "classification_report_path"]  # noqa:E501
+        columns=[
+            "RunID",
+            "confusion_matrix_path",
+            "classification_report_path",
+        ]  # noqa:E501
     )
 
     # Подготовка графика метрик
@@ -233,14 +229,12 @@ def generate_report(filtered_runs):
     plt.close()
 
     # Формирование выводов
-    best_model = filtered_runs.loc[
-        filtered_runs["f1_score"].idxmax()
-    ]["Model"]
+    best_model = filtered_runs.loc[filtered_runs["f1_score"].idxmax()]["Model"]
     insights = [
         f"Наилучшая модель: {best_model}, так как она показала лучшие метрики.",  # noqa:E501
         "Результаты других моделей проанализированы в таблицах выше.",
-        "Модели логистической регрессии также продемонстрировали хорошие результаты, но с некоторыми недостатками в полноте для класса \"негатив\".",
-        "Модели деревьев решений оказались менее эффективными по сравнению с линейными моделями, что может быть связано с их чувствительностью к переобучению, особенно при увеличении глубины дерева."
+        'Модели логистической регрессии также продемонстрировали хорошие результаты, но с некоторыми недостатками в полноте для класса "негатив".',
+        "Модели деревьев решений оказались менее эффективными по сравнению с линейными моделями, что может быть связано с их чувствительностью к переобучению, особенно при увеличении глубины дерева.",
     ]
 
     # Рендеринг HTML-отчета через Jinja2
@@ -261,9 +255,9 @@ def generate_report(filtered_runs):
     # Загружаем отчеты о классификации
     model_reports = {}
     for _, row in filtered_runs.iterrows():
-        model_name = row['Model']
-        report_path = os.path.join(output_dir, row['classification_report_path'])
-        with open(report_path, 'r') as f:
+        model_name = row["Model"]
+        report_path = os.path.join(output_dir, row["classification_report_path"])
+        with open(report_path, "r") as f:
             model_reports[model_name] = f.read()
 
     # Загрузка шаблона
@@ -275,18 +269,18 @@ def generate_report(filtered_runs):
 
     # Контекст шаблона
     template_context = {
-        'experiment_name': experiment_name,
-        'runs': filtered_runs_display.to_dict(orient="records"),
-        'full_runs': filtered_runs.to_dict(orient="records"),
-        'model_reports': model_reports,
-        'insights': insights,
-        'graph_path': graph_filename,
-        'current_date': current_date,
-        'experiment_id': experiment_id,
-        'best_accuracy': best_accuracy,
-        'best_precision': best_precision,
-        'best_recall': best_recall,
-        'best_f1_score': best_f1_score,
+        "experiment_name": experiment_name,
+        "runs": filtered_runs_display.to_dict(orient="records"),
+        "full_runs": filtered_runs.to_dict(orient="records"),
+        "model_reports": model_reports,
+        "insights": insights,
+        "graph_path": graph_filename,
+        "current_date": current_date,
+        "experiment_id": experiment_id,
+        "best_accuracy": best_accuracy,
+        "best_precision": best_precision,
+        "best_recall": best_recall,
+        "best_f1_score": best_f1_score,
         **mlflow_context,
     }
 
@@ -311,16 +305,16 @@ def get_mlflow_model_performance(run_ids):
         metrics = run.data.metrics
         params = run.data.params
 
-        model_name = params.get('model', 'Unknown Model')
+        model_name = params.get("model", "Unknown Model")
         performance_data[run_id] = {
-            'model_name': model_name,
-            'metrics': metrics,
-            'parameters': params,
-            'start_time': run.info.start_time,
-            'end_time': run.info.end_time,
+            "model_name": model_name,
+            "metrics": metrics,
+            "parameters": params,
+            "start_time": run.info.start_time,
+            "end_time": run.info.end_time,
             # в секундах
-            'duration': (run.info.end_time - run.info.start_time) / 1000,
-            'status': run.info.status,
+            "duration": (run.info.end_time - run.info.start_time) / 1000,
+            "status": run.info.status,
         }
 
     return performance_data
@@ -334,20 +328,20 @@ def generate_mlflow_performance_plot(performance_data):
 
     # График времени выполнения
     plt.figure(figsize=(10, 6))
-    durations = [data['duration'] for data in performance_data.values()]
-    model_names = [data['model_name'] for data in performance_data.values()]
+    durations = [data["duration"] for data in performance_data.values()]
+    model_names = [data["model_name"] for data in performance_data.values()]
 
     plt.bar(model_names, durations)
-    plt.title('Model Training Duration')
-    plt.xlabel('Model')
-    plt.ylabel('Duration (seconds)')
-    plt.xticks(rotation=45, ha='right')
+    plt.title("Model Training Duration")
+    plt.xlabel("Model")
+    plt.ylabel("Duration (seconds)")
+    plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
 
-    duration_plot_path = os.path.join(output_dir, 'model_durations.png')
+    duration_plot_path = os.path.join(output_dir, "model_durations.png")
     plt.savefig(duration_plot_path)
     plt.close()
-    plots['duration_plot'] = 'model_durations.png'
+    plots["duration_plot"] = "model_durations.png"
 
     return plots
 
@@ -357,7 +351,7 @@ def enhance_report_generation(filtered_runs):
     Дополнительная информацией из MLflow
     """
     # Получаем данные о производительности моделей из MLflow
-    run_ids = filtered_runs['RunID'].tolist()
+    run_ids = filtered_runs["RunID"].tolist()
     performance_data = get_mlflow_model_performance(run_ids)
 
     # Генерируем дополнительные графики
@@ -365,8 +359,8 @@ def enhance_report_generation(filtered_runs):
 
     # Добавляем новые данные в контекст шаблона
     template_context = {
-        'mlflow_plot': performance_plot,
-        'performance_data': performance_data,
+        "mlflow_plot": performance_plot,
+        "performance_data": performance_data,
     }
 
     return template_context
@@ -379,4 +373,3 @@ if __name__ == "__main__":
 
     print("Generating report...")
     generate_report(experiment_results)
-
