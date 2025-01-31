@@ -1,5 +1,8 @@
 name: DVC
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -65,5 +68,5 @@ jobs:
       - name: Git push DVC Config
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.ACTIONS_PAT }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
