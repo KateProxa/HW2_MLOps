@@ -1,0 +1,8 @@
+stages:
+  preprocessing:
+    cmd: python data_preprocessing.py
+    deps:
+    - data/ObesityDataSet.csv
+    - data_preprocessing.py
+    outs:
+    - data/clean_data.csv

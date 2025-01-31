@@ -1,1 +1,63 @@
+name: DVC
 
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  dvc-setup-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install DVC
+        run: pip install dvc[gdrive]
+
+      - name: Configure Google Drive credentials
+        env:
+          GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          echo "$GDRIVE_SERVICE_ACCOUNT_JSON" > service-account.json
+          dvc remote modify myremote gdrive_service_account_json_file_path service-account.json
+          dvc remote modify myremote gdrive_use_service_account true
+
+      - name: Configure DVC Remote
+        run: |
+           dvc remote add -d myremote gdrive://1myy-Uq-mwBTxGX_lZk4kp0Jnw72_tXpx
+
+      - name: DVC Pull Data
+        run: dvc pull  # Скачиваем все зависимости
+
+      - name: Run DVC Pipeline
+        run: dvc repro  # Запускаем пайплайн
+
+      - name: DVC Push Data
+        run: dvc push  # Отправляем результаты
+
+      - name: Git add and commit DVC files
+        run: |
+          git config user.email "github-actions@example.com"
+          git config user.name "GitHub Actions"
+          git add .dvc dvc.lock
+    
+          if [[ $(git status --porcelain | grep -c "dvc.lock\|.dvc") -ne 0 ]]; then
+            git commit -m "Update DVC data"
+          else
+            echo "No changes to commit"
+          fi
+
+      - name: Git push DVC Config
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ACTIONS_PAT }}
+          branch: ${{ github.ref }}
