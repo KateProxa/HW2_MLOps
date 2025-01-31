@@ -56,4 +56,4 @@
 
 ## Отчет об экспериментах
 
-[Отчет](/mlflow_output/index.html)
+[Открыть отчет](mlflow_output/index.html)
