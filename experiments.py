@@ -1,12 +1,13 @@
 import mlflow
 import mlflow.sklearn
+import clearml
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.svm import SVC  # Импортируем SVM
+from sklearn.svm import SVC  
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
     accuracy_score,
@@ -18,6 +19,13 @@ from sklearn.metrics import (
 )
 from datetime import datetime
 from jinja2 import Template
+from clearml import Task
+
+task = Task.init(
+    project_name="Obesity Prediction",
+    task_name="Model Training",
+    task_type=Task.TaskTypes.optimizer,
+)
 
 # Загрузка данных
 data = pd.read_csv("data/clean_data.csv")
@@ -118,6 +126,8 @@ def log_model_with_metrics(
             "classification_report_path": report_filename,
         }
 
+        task.upload_artifact("model", artifact_object=model)
+
 
 def run_experiments():
     """Запуск нескольких экспериментов с разными параметрами"""
@@ -169,6 +179,15 @@ def run_experiments():
             'confusion_matrix_path': run_results["confusion_matrix_path"],
             'classification_report_path': run_results["classification_report_path"],  # noqa:E501
         })
+        task.connect({
+            "accuracy": mlflow.get_run(run_id).data.metrics["accuracy"],
+            "precision": mlflow.get_run(run_id).data.metrics["precision"],
+            "recall": mlflow.get_run(run_id).data.metrics["recall"],
+            "f1_score": mlflow.get_run(run_id).data.metrics["f1_score"],
+            "confusion_matrix_path": run_results["confusion_matrix_path"],
+            "classification_report_path": run_results["classification_report_path"]}
+            )
+
         print(f"Completed experiment with {exp['name']}")
 
 
@@ -180,7 +199,7 @@ def run_experiments():
 # Генерация HTML-отчета
 def generate_report(filtered_runs):
     # Сохраняем только последние 4 эксперимента
-    filtered_runs = filtered_runs[-4:]
+    #filtered_runs = filtered_runs[-4:]
 
     # Округляем значения до 4 знаков
     for metric in ["accuracy", "precision", "recall", "f1_score"]:

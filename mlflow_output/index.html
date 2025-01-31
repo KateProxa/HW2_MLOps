@@ -165,8 +165,8 @@
 </head>
 <body>
     <h1>Experiment: obesity_prediction_experiment</h1>
-    <p>Generated on: 2025-01-31 12:53:46</p>
-    <p>Experiment ID: 20250131125346</p>
+    <p>Generated on: 2025-01-31 18:33:31</p>
+    <p>Experiment ID: 20250131183331</p>
 
     <h2>Краткий обзор</h2>
     <p>В этом эксперименте сравнивается производительность различных моделей машинного обучения на наборе данных о риске возникновения ожирения. Среди тестируемых моделей:</p>
@@ -199,6 +199,40 @@
             </tr>
         </thead>
         <tbody>
+            
+                <tr>
+                    
+                        <td>
+                            
+                                Logistic Regression (C=1.0)
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9761
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9766
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9761
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9758
+                            
+                        </td>
+                    
+                </tr>
             
                 <tr>
                     
@@ -369,8 +403,54 @@
                 <tbody>
                     
                     <tr>
+                        <td>Logistic Regression (C=1.0)</td>
+                        <td>26.79</td>
+                        <td>FINISHED</td>
+                        <td>
+                            <details>
+                                <summary>Показать параметры</summary>
+                                <ul>
+                                    
+                                    <li><strong>C:</strong> 1.0</li>
+                                    
+                                    <li><strong>class_weight:</strong> None</li>
+                                    
+                                    <li><strong>dual:</strong> False</li>
+                                    
+                                    <li><strong>fit_intercept:</strong> True</li>
+                                    
+                                    <li><strong>intercept_scaling:</strong> 1</li>
+                                    
+                                    <li><strong>l1_ratio:</strong> None</li>
+                                    
+                                    <li><strong>max_iter:</strong> 1000</li>
+                                    
+                                    <li><strong>model:</strong> Logistic Regression (C=1.0)</li>
+                                    
+                                    <li><strong>multi_class:</strong> auto</li>
+                                    
+                                    <li><strong>n_jobs:</strong> None</li>
+                                    
+                                    <li><strong>penalty:</strong> l2</li>
+                                    
+                                    <li><strong>random_state:</strong> 42</li>
+                                    
+                                    <li><strong>solver:</strong> lbfgs</li>
+                                    
+                                    <li><strong>tol:</strong> 0.0001</li>
+                                    
+                                    <li><strong>verbose:</strong> 0</li>
+                                    
+                                    <li><strong>warm_start:</strong> False</li>
+                                    
+                                </ul>
+                            </details>
+                        </td>
+                    </tr>
+                    
+                    <tr>
                         <td>Logistic Regression (C=0.5)</td>
-                        <td>9.11</td>
+                        <td>9.22</td>
                         <td>FINISHED</td>
                         <td>
                             <details>
@@ -416,7 +496,7 @@
                     
                     <tr>
                         <td>SVM (Linear Kernel)</td>
-                        <td>9.09</td>
+                        <td>9.32</td>
                         <td>FINISHED</td>
                         <td>
                             <details>
@@ -462,7 +542,7 @@
                     
                     <tr>
                         <td>Decision Tree (max_depth=10)</td>
-                        <td>9.38</td>
+                        <td>9.50</td>
                         <td>FINISHED</td>
                         <td>
                             <details>
@@ -504,7 +584,7 @@
                     
                     <tr>
                         <td>Decision Tree (max_depth=15)</td>
-                        <td>9.04</td>
+                        <td>10.84</td>
                         <td>FINISHED</td>
                         <td>
                             <details>
@@ -551,6 +631,23 @@
 
     <h2>Подробные результаты для каждой модели</h2>
 
+    
+        <div class="model-summary">
+            <h3>Logistic Regression (C=1.0)</h3>
+
+            <h4>Classification Report</h4>
+            <pre>              precision    recall  f1-score   support
+
+           0       0.99      0.92      0.96       182
+           1       0.97      1.00      0.98       445
+
+    accuracy                           0.98       627
+   macro avg       0.98      0.96      0.97       627
+weighted avg       0.98      0.98      0.98       627
+</pre>
+
+            <img src="confusion_matrix_logistic_regression_(c=1.0).png" alt="Confusion Matrix for Logistic Regression (C=1.0)">
+        </div>
     
         <div class="model-summary">
             <h3>Logistic Regression (C=0.5)</h3>
@@ -622,7 +719,17 @@ weighted avg       0.95      0.95      0.95       627
     
 
     <h2>Выводы</h2>
-
+    <p>
+        <strong>Лучшая модель:</strong> Модель дерева решений с `max_depth=15` достигла наивысших значений accuracy (0.9936), precision (0.9937), recall (0.9936) и f1_score (0.9936), что делает ее самой надежной моделью в этом эксперименте.</p>
+    <p>
+        <strong>Логистическая регрессия: </strong> Эта модель показала относительно низкую производительность в сравнении. Изменение параметра регуляризации `C` не оказало существенного влияния на ее производительность, что говорит о том, что она может быть не самой лучшей моделью для данного набора данных.
+    </p>
+    <p>
+        <strong>Эффект глубины дерева решений:</strong> Увеличение max_depth дерева решений с 10 до 15 улучшило все показатели производительности, указывая на то, что при меньшей глубине модель была недостаточно приспособлена.
+    </p>
+    <p>
+        <strong>Время обучения моделей</strong>: Логистическая регрессия с C=1.0 требует значительно больше времени на обучение (4.8 секунд) по сравнению с другими моделями. Интересно отметить, что уменьшение параметра регуляризации C до 0.5 существенно сократило время обучения до 2.9 секунд. Деревья решений показали стабильное время обучения около 3 секунд независимо от глубины (max_depth=10 или max_depth=15), что делает их не только более эффективными по метрикам качества, но и достаточно быстрыми в обучении.
+    </p>
 
 </body>
 </html>
