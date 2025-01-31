@@ -1,0 +1,18 @@
+schema: '2.0'
+stages:
+  preprocessing:
+    cmd: python data_preprocessing.py
+    deps:
+    - path: data/ObesityDataSet.csv
+      hash: md5
+      md5: aff636fcccdf0a24ed7186e48bad2548
+      size: 263646
+    - path: data_preprocessing.py
+      hash: md5
+      md5: 271ca303d728016482a67784af8225a9
+      size: 2233
+    outs:
+    - path: data/clean_data.csv
+      hash: md5
+      md5: 4d0fc1b164d52e24d32632e5502b18f2
+      size: 368358

@@ -20,7 +20,6 @@ def save_data(df, output_path):
 def main(input_path, output_path):
     df = load_data(input_path)
     df = clean_data(df)
-
     # Таргет
     df['Obesity_Binary'] = df['NObeyesdad'].apply(lambda x: 1 if x in ['Obesity_Type_I', 'Obesity_Type_II', 'Obesity_Type_III', 'Overweight_Level_I', 'Overweight_Level_II'] else 0)
     df.drop(columns=['NObeyesdad'], inplace=True)
@@ -49,11 +48,10 @@ def main(input_path, output_path):
 
     scaler = StandardScaler()
     df[num_columns] = scaler.fit_transform(df[num_columns])
-
     save_data(df, output_path)
 
 
-    if __name__ == "__main__":
-        main("/home/runner/work/HW2_MLOps/HW2_MLOps/data/ObesityDataSet.csv", "/home/runner/work/HW2_MLOps/HW2_MLOps/data/clean_data.csv")
+if __name__ == "__main__":
+    main("./data/ObesityDataSet.csv", "./data/clean_data.csv")
 
 
