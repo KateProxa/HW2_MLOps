@@ -15,12 +15,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
-          
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
+          python-version: '3.12'
 
-      - name: Install DVC
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install DVC with Google Drive support
         run: pip install dvc[gdrive]
 
       - name: Configure Google Drive credentials
@@ -28,30 +30,28 @@ jobs:
           GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
         run: |
           echo "$GDRIVE_SERVICE_ACCOUNT_JSON" > service-account.json
-          dvc remote modify myremote gdrive_service_account_json_file_path service-account.json
-          dvc remote modify myremote gdrive_use_service_account true
-
-      - name: Configure DVC Remote
-        run: |
-           dvc remote add -d myremote gdrive://1myy-Uq-mwBTxGX_lZk4kp0Jnw72_tXpx
+          dvc remote modify remotekate gdrive_service_account_json_file_path service-account.json
+          dvc remote modify remotekate gdrive_use_service_account true
 
       - name: DVC Pull Data
         run: dvc pull  # Скачиваем все зависимости
 
       - name: Run DVC Pipeline
-        run: dvc repro  # Запускаем пайплайн
+        run: |
+          dvc repro  # Запускаем пайплайн
 
       - name: DVC Push Data
-        run: dvc push  # Отправляем результаты
+        run: |
+          dvc push  # Отправляем результаты
 
       - name: Git add and commit DVC files
         run: |
-          git config user.email "github-actions@example.com"
-          git config user.name "GitHub Actions"
+          git config user.email "your-email@example.com"  # Укажите свой email
+          git config user.name "Your Name"  # Укажите свое имя
           git add .dvc dvc.lock
     
           if [[ $(git status --porcelain | grep -c "dvc.lock\|.dvc") -ne 0 ]]; then
-            git commit -m "Update DVC data"
+            git commit -m "Update DVC outputs"
           else
             echo "No changes to commit"
           fi

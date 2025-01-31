@@ -1,5 +1,6 @@
 [core]
-    remote = myremote
-['remote "myremote"']
+    remote = remotekate
+
+[remote "remotekate"]
     url = gdrive://1myy-Uq-mwBTxGX_lZk4kp0Jnw72_tXpx
     gdrive_use_service_account = true
