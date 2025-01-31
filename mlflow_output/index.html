@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>obesity_prediction_experiment - Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        h3 {
+            margin-top: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+        }
+        .model-summary {
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .model-summary h3 {
+            margin-top: 0;
+        }
+        .model-summary p {
+            margin: 5px 0;
+        }
+
+         .mlflow-analysis {
+        margin: 2em 0;
+        padding: 1em;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        }
+
+        .plot-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            justify-content: center;
+            margin: 1em 0;
+        }
+
+        .plot-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .model-card {
+            background-color: white;
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+        }
+
+        .performance-table th,
+        .performance-table td {
+            padding: 0.5em;
+            border: 1px solid #dee2e6;
+            text-align: left;
+        }
+
+        .performance-table th {
+            background-color: #f1f3f5;
+        }
+
+        details summary {
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        details ul {
+            margin-top: 0.5em;
+            padding-left: 1.5em;
+        }
+
+        .mlflow-analysis {
+            margin: 2em 0;
+            padding: 1em;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .plot-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            justify-content: center;
+            margin: 1em 0;
+        }
+
+        .plot-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .model-card {
+            background-color: white;
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+        }
+
+        .performance-table th,
+        .performance-table td {
+            padding: 0.5em;
+            border: 1px solid #dee2e6;
+            text-align: left;
+        }
+
+        .performance-table th {
+            background-color: #f1f3f5;
+        }
+
+        details summary {
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        details ul {
+            margin-top: 0.5em;
+            padding-left: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Experiment: obesity_prediction_experiment</h1>
+    <p>Generated on: 2025-01-31 12:53:46</p>
+    <p>Experiment ID: 20250131125346</p>
+
+    <h2>Краткий обзор</h2>
+    <p>В этом эксперименте сравнивается производительность различных моделей машинного обучения на наборе данных о риске возникновения ожирения. Среди тестируемых моделей:</p>
+    <ul>
+        <li><strong>Logistic Regression</strong>: Линейная модель, используемая для классификации. Мы протестировали два варианта: стандартный `C=1.0` и `C=0.5`.</li>
+        <li><strong>Decision Tree</strong>: Нелинейная модель с регулируемой глубиной. Мы протестировали две вариации: max depth `10` and `15`.</li>
+        <li><strong>SVM (Linear Kernel)</strong>: Метод опорных векторов (SVM) с линейным ядром используется для классификации, особенно эффективен для линейно разделимых данных.</li>
+    </ul>
+    <p>Использовались следующие гиперпараметры:</p>
+    <ul>
+        <li>Logistic Regression: `max_iter=1000` и `max_iter=2000` с `C=1.0` and `C=0.5`.</li>
+        <li>Decision Tree: `max_depth=10` и `max_depth=15`.</li>
+    </ul>
+
+    <h2>Models Performance Metrics</h2>
+    <table>
+        <thead>
+            <tr>
+                
+                    <th>Model</th>
+                
+                    <th>accuracy</th>
+                
+                    <th>precision</th>
+                
+                    <th>recall</th>
+                
+                    <th>f1_score</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            
+                <tr>
+                    
+                        <td>
+                            
+                                Logistic Regression (C=0.5)
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9665
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9676
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9665
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9659
+                            
+                        </td>
+                    
+                </tr>
+            
+                <tr>
+                    
+                        <td>
+                            
+                                SVM (Linear Kernel)
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9936
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9937
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9936
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9936
+                            
+                        </td>
+                    
+                </tr>
+            
+                <tr>
+                    
+                        <td>
+                            
+                                Decision Tree (max_depth=10)
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9490
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9493
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9490
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9481
+                            
+                        </td>
+                    
+                </tr>
+            
+                <tr>
+                    
+                        <td>
+                            
+                                Decision Tree (max_depth=15)
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9490
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9493
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9490
+                            
+                        </td>
+                    
+                        <td>
+                            
+                                0.9481
+                            
+                        </td>
+                    
+                </tr>
+            
+        </tbody>
+    </table>
+
+    <h2>Сравнение производительности</h2>
+    <img src="performance_comparison.png" alt="Performance Comparison">
+
+    <!-- MLflow Performance Analysis Section -->
+    <section class="mlflow-analysis">
+        <h2>Подробный анализ производительности моделей</h2>
+        
+        <!-- Графики производительности -->
+        <div class="performance-plots">
+            <h3>График производительности</h3>
+            <div class="plot-container">
+                <img src="model_durations.png" alt="Model Training Duration" class="plot-image">
+            </div>
+        </div>
+
+        <!-- Дополнительная информация о производительности -->
+        <div class="performance-details">
+            <h3>Детали производительности</h3>
+            <table class="performance-table">
+                <thead>
+                    <tr>
+                        <th>Модель</th>
+                        <th>Время выполнения (сек)</th>
+                        <th>Статус</th>
+                        <th>Параметры</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>Logistic Regression (C=0.5)</td>
+                        <td>9.11</td>
+                        <td>FINISHED</td>
+                        <td>
+                            <details>
+                                <summary>Показать параметры</summary>
+                                <ul>
+                                    
+                                    <li><strong>C:</strong> 0.5</li>
+                                    
+                                    <li><strong>class_weight:</strong> None</li>
+                                    
+                                    <li><strong>dual:</strong> False</li>
+                                    
+                                    <li><strong>fit_intercept:</strong> True</li>
+                                    
+                                    <li><strong>intercept_scaling:</strong> 1</li>
+                                    
+                                    <li><strong>l1_ratio:</strong> None</li>
+                                    
+                                    <li><strong>max_iter:</strong> 2000</li>
+                                    
+                                    <li><strong>model:</strong> Logistic Regression (C=0.5)</li>
+                                    
+                                    <li><strong>multi_class:</strong> auto</li>
+                                    
+                                    <li><strong>n_jobs:</strong> None</li>
+                                    
+                                    <li><strong>penalty:</strong> l2</li>
+                                    
+                                    <li><strong>random_state:</strong> 42</li>
+                                    
+                                    <li><strong>solver:</strong> lbfgs</li>
+                                    
+                                    <li><strong>tol:</strong> 0.0001</li>
+                                    
+                                    <li><strong>verbose:</strong> 0</li>
+                                    
+                                    <li><strong>warm_start:</strong> False</li>
+                                    
+                                </ul>
+                            </details>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>SVM (Linear Kernel)</td>
+                        <td>9.09</td>
+                        <td>FINISHED</td>
+                        <td>
+                            <details>
+                                <summary>Показать параметры</summary>
+                                <ul>
+                                    
+                                    <li><strong>break_ties:</strong> False</li>
+                                    
+                                    <li><strong>C:</strong> 1.0</li>
+                                    
+                                    <li><strong>cache_size:</strong> 200</li>
+                                    
+                                    <li><strong>class_weight:</strong> None</li>
+                                    
+                                    <li><strong>coef0:</strong> 0.0</li>
+                                    
+                                    <li><strong>decision_function_shape:</strong> ovr</li>
+                                    
+                                    <li><strong>degree:</strong> 3</li>
+                                    
+                                    <li><strong>gamma:</strong> scale</li>
+                                    
+                                    <li><strong>kernel:</strong> linear</li>
+                                    
+                                    <li><strong>max_iter:</strong> -1</li>
+                                    
+                                    <li><strong>model:</strong> SVM (Linear Kernel)</li>
+                                    
+                                    <li><strong>probability:</strong> False</li>
+                                    
+                                    <li><strong>random_state:</strong> 42</li>
+                                    
+                                    <li><strong>shrinking:</strong> True</li>
+                                    
+                                    <li><strong>tol:</strong> 0.001</li>
+                                    
+                                    <li><strong>verbose:</strong> False</li>
+                                    
+                                </ul>
+                            </details>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Decision Tree (max_depth=10)</td>
+                        <td>9.38</td>
+                        <td>FINISHED</td>
+                        <td>
+                            <details>
+                                <summary>Показать параметры</summary>
+                                <ul>
+                                    
+                                    <li><strong>ccp_alpha:</strong> 0.0</li>
+                                    
+                                    <li><strong>class_weight:</strong> None</li>
+                                    
+                                    <li><strong>criterion:</strong> gini</li>
+                                    
+                                    <li><strong>max_depth:</strong> 10</li>
+                                    
+                                    <li><strong>max_features:</strong> None</li>
+                                    
+                                    <li><strong>max_leaf_nodes:</strong> None</li>
+                                    
+                                    <li><strong>min_impurity_decrease:</strong> 0.0</li>
+                                    
+                                    <li><strong>min_samples_leaf:</strong> 1</li>
+                                    
+                                    <li><strong>min_samples_split:</strong> 2</li>
+                                    
+                                    <li><strong>min_weight_fraction_leaf:</strong> 0.0</li>
+                                    
+                                    <li><strong>model:</strong> Decision Tree (max_depth=10)</li>
+                                    
+                                    <li><strong>monotonic_cst:</strong> None</li>
+                                    
+                                    <li><strong>random_state:</strong> 42</li>
+                                    
+                                    <li><strong>splitter:</strong> best</li>
+                                    
+                                </ul>
+                            </details>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Decision Tree (max_depth=15)</td>
+                        <td>9.04</td>
+                        <td>FINISHED</td>
+                        <td>
+                            <details>
+                                <summary>Показать параметры</summary>
+                                <ul>
+                                    
+                                    <li><strong>ccp_alpha:</strong> 0.0</li>
+                                    
+                                    <li><strong>class_weight:</strong> None</li>
+                                    
+                                    <li><strong>criterion:</strong> gini</li>
+                                    
+                                    <li><strong>max_depth:</strong> 15</li>
+                                    
+                                    <li><strong>max_features:</strong> None</li>
+                                    
+                                    <li><strong>max_leaf_nodes:</strong> None</li>
+                                    
+                                    <li><strong>min_impurity_decrease:</strong> 0.0</li>
+                                    
+                                    <li><strong>min_samples_leaf:</strong> 1</li>
+                                    
+                                    <li><strong>min_samples_split:</strong> 2</li>
+                                    
+                                    <li><strong>min_weight_fraction_leaf:</strong> 0.0</li>
+                                    
+                                    <li><strong>model:</strong> Decision Tree (max_depth=15)</li>
+                                    
+                                    <li><strong>monotonic_cst:</strong> None</li>
+                                    
+                                    <li><strong>random_state:</strong> 42</li>
+                                    
+                                    <li><strong>splitter:</strong> best</li>
+                                    
+                                </ul>
+                            </details>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <h2>Подробные результаты для каждой модели</h2>
+
+    
+        <div class="model-summary">
+            <h3>Logistic Regression (C=0.5)</h3>
+
+            <h4>Classification Report</h4>
+            <pre>              precision    recall  f1-score   support
+
+           0       0.99      0.89      0.94       182
+           1       0.96      1.00      0.98       445
+
+    accuracy                           0.97       627
+   macro avg       0.98      0.94      0.96       627
+weighted avg       0.97      0.97      0.97       627
+</pre>
+
+            <img src="confusion_matrix_logistic_regression_(c=0.5).png" alt="Confusion Matrix for Logistic Regression (C=0.5)">
+        </div>
+    
+        <div class="model-summary">
+            <h3>SVM (Linear Kernel)</h3>
+
+            <h4>Classification Report</h4>
+            <pre>              precision    recall  f1-score   support
+
+           0       1.00      0.98      0.99       182
+           1       0.99      1.00      1.00       445
+
+    accuracy                           0.99       627
+   macro avg       1.00      0.99      0.99       627
+weighted avg       0.99      0.99      0.99       627
+</pre>
+
+            <img src="confusion_matrix_svm_(linear_kernel).png" alt="Confusion Matrix for SVM (Linear Kernel)">
+        </div>
+    
+        <div class="model-summary">
+            <h3>Decision Tree (max_depth=10)</h3>
+
+            <h4>Classification Report</h4>
+            <pre>              precision    recall  f1-score   support
+
+           0       0.96      0.86      0.91       182
+           1       0.95      0.98      0.96       445
+
+    accuracy                           0.95       627
+   macro avg       0.95      0.92      0.94       627
+weighted avg       0.95      0.95      0.95       627
+</pre>
+
+            <img src="confusion_matrix_decision_tree_(max_depth=10).png" alt="Confusion Matrix for Decision Tree (max_depth=10)">
+        </div>
+    
+        <div class="model-summary">
+            <h3>Decision Tree (max_depth=15)</h3>
+
+            <h4>Classification Report</h4>
+            <pre>              precision    recall  f1-score   support
+
+           0       0.96      0.86      0.91       182
+           1       0.95      0.98      0.96       445
+
+    accuracy                           0.95       627
+   macro avg       0.95      0.92      0.94       627
+weighted avg       0.95      0.95      0.95       627
+</pre>
+
+            <img src="confusion_matrix_decision_tree_(max_depth=15).png" alt="Confusion Matrix for Decision Tree (max_depth=15)">
+        </div>
+    
+
+    <h2>Выводы</h2>
+
+
+</body>
+</html>

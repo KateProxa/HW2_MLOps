@@ -16,7 +16,34 @@
 
 ```
 ├── data/                        # Папка с исходными данными
+├── mlflow_output                # Папка для отчета
 ├── data_preprocessing.py        # Скрипт предобработки данных
-├── run_experiments.py           # Скрипт с экспериментами для MLflow
+├── experiments.py               # Скрипт с экспериментами для MLflow
+├── report_template.html         # Шаблон отчета
 └── README.md                    # Описание проекта
 ```
+
+## Описание датасета
+Для выполнения  задания используется скачанный с kaggle набор данных\
+["Риск возникновения ожирения или сердечно-сосудистых заболеваний"](https://www.kaggle.com/datasets/aravindpcoder/obesity-or-cvd-risk-classifyregressorcluster)
+
+Описание признаков:
+- Gender: пол;
+- Age: возраст;
+- Height: рост;
+- Weight: вес;
+- family_history_with_overweight: ожирение это семейное или нет;
+- FAVC (Frequent consumption of high caloric food): частое потребление высококалорийной пищи;
+- FCVC (Frequency of consumption of vegetables): частота потребления овощей;
+- NCP (Number of main meals): количество основных приемов пищи;
+- CAEC (Consumption of food between meals): наличие перекусов;
+- SMOKE: курильщик или нет;
+- CH2O (Consumption of water daily): ежедневное потребление воды;
+- SCC (Calories consumption monitoring): мониторинг потребления калорий;
+- FAF (Physical activity frequency): частота физической активности;
+- TUE (Time using technology devices): время использования технологических устройств;
+- CALC (Consumption of alcohol): потребление алкоголя;
+- MTRANS (Transportation used): используемый транспорт;
+- NObeyesdad: уровень ожирения.
+
+
